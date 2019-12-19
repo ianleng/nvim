@@ -91,6 +91,9 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'majutsushi/tagbar'
+Plug 'tmhedberg/SimpylFold'
+Plug 'vim-scripts/indentpython.vim'
+
 
 "Plug 'dense-analysis/ale'
 
@@ -126,3 +129,15 @@ let g:NERDTreeIndicatorMapCustom = {
 "
 nmap <F8> :TagbarToggle<CR>
 
+"see the docstrings for folded code:
+let g:SimpylFold_docstring_preview=1
+
+"add the proper PEP 8 indentation
+"au BufNewFile,BufRead *.py
+"    \ set tabstop=4
+"    \ set softtabstop=4
+"    \ set shiftwidth=4
+"    \ set textwidth=79
+"    \ set expandtab
+"    \ set autoindent
+"    \ set fileformat=unix
