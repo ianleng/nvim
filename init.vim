@@ -40,6 +40,7 @@ map <down> :res -5<cr>
 map <left> :vertical resize-5<cr>
 map <right> :vertical resize+5<cr>
 
+" For Windows
 if exists('g:GuiLoaded')
 	GuiPopupmenu 0
 endif
