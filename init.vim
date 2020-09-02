@@ -40,7 +40,10 @@ map <down> :res -5<cr>
 map <left> :vertical resize-5<cr>
 map <right> :vertical resize+5<cr>
 
+" =======================
 " For Windows
+" =======================
+" Popupmenu
 if exists('g:GuiLoaded')
 	GuiPopupmenu 0
 endif
@@ -51,27 +54,11 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/seoul256.vim'
-Plug 'connorholyday/vim-snazzy'
-Plug 'fcpg/vim-orbital'
-
-Plug 'preservim/nerdtree' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
-            \ Plug 'ryanoasis/vim-devicons'
-
+Plug 'lambdalisue/vim-fullscreen'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-" Cursorword
 Plug 'itchyny/vim-cursorword'
-
-" Coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-" Interestingwords
-Plug 'lfv89/vim-interestingwords'
-
-" Full Screen
-Plug 'lambdalisue/vim-fullscreen'
 
 call plug#end()
 
@@ -83,11 +70,16 @@ let g:seoul256_background = 234
 let g:seoul256_srgb = 1
 colo seoul256
 
+" FullScreen
+let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1)"
+let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)"
 
 " coc.nvim
 set hidden
 set updatetime=100
 set shortmess+=c
+
+nmap tt :CocCommand explorer<CR>
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -215,5 +207,6 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
+	\ 'coc-explorer',
 	\ 'coc-python',
 	\ 'coc-json']
