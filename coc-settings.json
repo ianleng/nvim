@@ -2,5 +2,12 @@
 	"coc.preferences.extensionUpdateCheck": "daily",
 	"suggest.noselect": true,
 	"suggest.enablePreselect": false,
-	"python.jediEnabled": false
+	"python.jediEnabled": false,
+
+	"python.linting.enabled": true,
+	"python.linting.pylintEnabled": true,
+
+	"snippets.ultisnips.directories": [
+		"UltiSnips"
+	]
 }
