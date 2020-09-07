@@ -3,6 +3,7 @@
 	"suggest.noselect": true,
 	"suggest.enablePreselect": false,
 	"python.jediEnabled": false,
+	"python.pythonPath": "C:\\Users\\qsle\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
 
 	"python.linting.enabled": true,
 	"python.linting.pylintEnabled": true,
