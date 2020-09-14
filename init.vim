@@ -71,11 +71,11 @@ call plug#end()
 " Plug Setting
 " =======================
 " theme
-"let g:seoul256_background = 235
-"let g:seoul256_srgb = 1
-"colo seoul256
+let g:seoul256_background = 235
+let g:seoul256_srgb = 1
+colo seoul256
 "colo deus
-colo bluewery
+"colo bluewery
 
 "let g:lightline = {'colorscheme': 'bluewery'}
 
