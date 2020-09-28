@@ -8,5 +8,7 @@
 
 	"snippets.ultisnips.directories": [
 		"UltiSnips"
-	]
+	],
+
+	"explorer.file.showHiddenFiles": true
 }

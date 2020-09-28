@@ -64,8 +64,18 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'relastle/bluewery.vim'
 Plug 'itchyny/vim-cursorword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'puremourning/vimspector'
 
 call plug#end()
+
+" coc plugin
+let g:coc_global_extensions = [
+	\ 'coc-vimlsp',
+	\ 'coc-explorer',
+	\ 'coc-python',
+	\ 'coc-snippets',
+	\ 'coc-explorer',
+	\ 'coc-json']
 
 " =======================
 " Plug Setting
@@ -82,6 +92,13 @@ colo seoul256
 " FullScreen
 let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1)"
 let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)"
+
+" Vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+"packadd! vimspector
+syntax enable
+filetype plugin indent on
+let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-python', 'CodeLLDB' ]
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -239,11 +256,4 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 nmap <space>e :CocCommand explorer<CR>
 
-let g:coc_global_extensions = [
-	\ 'coc-vimlsp',
-	\ 'coc-explorer',
-	\ 'coc-python',
-	\ 'coc-snippets',
-	\ 'coc-explorer',
-	\ 'coc-json']
 
