@@ -58,13 +58,14 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-"Plug 'itchyny/lightline.vim'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'relastle/bluewery.vim'
 Plug 'itchyny/vim-cursorword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'puremourning/vimspector'
+"Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
 
 call plug#end()
 
@@ -72,9 +73,12 @@ call plug#end()
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
 	\ 'coc-explorer',
+	\ 'coc-yank',
+	\ 'coc-git',
 	\ 'coc-python',
 	\ 'coc-snippets',
 	\ 'coc-explorer',
+	\ 'coc-translator',
 	\ 'coc-json']
 
 " =======================
@@ -87,7 +91,44 @@ colo seoul256
 "colo deus
 "colo bluewery
 
-"let g:lightline = {'colorscheme': 'bluewery'}
+let g:lightline = {'colorscheme': 'seoul256'}
+
+" coc-git lightline
+let g:lightline = {
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste' ],
+  \     [ 'ctrlpmark', 'git', 'diagnostic', 'cocstatus', 'filename', 'method' ]
+  \   ],
+  \   'right':[
+  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ],
+  \     [ 'blame' ]
+  \   ],
+  \ },
+  \ 'component_function': {
+  \   'blame': 'LightlineGitBlame',
+  \ },
+  \ 'colorscheme': 'seoul256'
+\ }
+
+" navigate chunks of current buffer
+nmap [g <Plug>(coc-git-prevchunk)
+nmap ]g <Plug>(coc-git-nextchunk)
+" show chunk diff at current position
+nmap gs <Plug>(coc-git-chunkinfo)
+" show commit contains current position
+nmap gc <Plug>(coc-git-commit)
+" create text object for git chunks
+omap ig <Plug>(coc-git-chunk-inner)
+xmap ig <Plug>(coc-git-chunk-inner)
+omap ag <Plug>(coc-git-chunk-outer)
+xmap ag <Plug>(coc-git-chunk-outer)
+
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  " return blame
+  return winwidth(0) > 120 ? blame : ''
+endfunction
 
 " FullScreen
 let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1)"
@@ -254,6 +295,9 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" coc-explorer
 nmap <space>e :CocCommand explorer<CR>
 
+" coc-yank
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
