@@ -105,7 +105,8 @@ let g:coc_global_extensions = [
 "colo seoul256
 "colo deus
 "colo bluewery
-colo one
+colorscheme one
+set background=dark
 
 let g:lightline = {'colorscheme': 'powerline'}
 
