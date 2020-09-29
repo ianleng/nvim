@@ -32,10 +32,10 @@ map sl :set nosplitright<cr>:vsplit<cr>
 map su :set nosplitbelow<cr>:split<cr>
 map sd :set splitbelow<cr>:split<cr>
 
-"map <leader>h <c-w>h
-"map <leader>j <c-w>j
-"map <leader>k <c-w>k
-"map <leader>l <c-w>l
+noremap <leader>wh <c-w>h
+noremap <leader>wj <c-w>j
+noremap <leader>wk <c-w>k
+noremap <leader>wl <c-w>l
 
 map <up> :res +5<cr>
 map <down> :res -5<cr>
@@ -45,10 +45,12 @@ map <right> :vertical resize+5<cr>
 " =======================
 " For Windows
 " =======================
-" Popupmenu
-"if exists('g:GuiLoaded')
-"	GuiPopupmenu 0
-"endif
+if has("win32")
+    set shell=powershell.exe
+    set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
+    set shellpipe=|
+    set shellredir=>
+endif
 
 " =======================
 " Plug Install
@@ -58,6 +60,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
+"Plug 'preservim/nerdtree'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 Plug 'itchyny/lightline.vim'
@@ -65,7 +68,8 @@ Plug 'relastle/bluewery.vim'
 Plug 'itchyny/vim-cursorword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'puremourning/vimspector'
-"Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
+Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
+Plug 'rakr/vim-one'
 
 call plug#end()
 
@@ -78,57 +82,30 @@ let g:coc_global_extensions = [
 	\ 'coc-python',
 	\ 'coc-snippets',
 	\ 'coc-explorer',
+	\ 'coc-bookmark',
 	\ 'coc-translator',
-	\ 'coc-json']
+	\ 'coc-json']"
 
 " =======================
 " Plug Setting
 " =======================
 " theme
-let g:seoul256_background = 235
-let g:seoul256_srgb = 1
-colo seoul256
+"let g:seoul256_background = 235
+"let g:seoul256_srgb = 1
+"colo seoul256
 "colo deus
 "colo bluewery
+colo one
 
-let g:lightline = {'colorscheme': 'seoul256'}
+let g:lightline = {'colorscheme': 'powerline'}
 
-" coc-git lightline
-let g:lightline = {
-  \ 'active': {
-  \   'left': [
-  \     [ 'mode', 'paste' ],
-  \     [ 'ctrlpmark', 'git', 'diagnostic', 'cocstatus', 'filename', 'method' ]
-  \   ],
-  \   'right':[
-  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ],
-  \     [ 'blame' ]
-  \   ],
-  \ },
-  \ 'component_function': {
-  \   'blame': 'LightlineGitBlame',
-  \ },
-  \ 'colorscheme': 'seoul256'
-\ }
+" coc-translator
+" popup
+nmap <leader>ts <Plug>(coc-translator-p)
 
-" navigate chunks of current buffer
-nmap [g <Plug>(coc-git-prevchunk)
-nmap ]g <Plug>(coc-git-nextchunk)
-" show chunk diff at current position
-nmap gs <Plug>(coc-git-chunkinfo)
-" show commit contains current position
-nmap gc <Plug>(coc-git-commit)
-" create text object for git chunks
-omap ig <Plug>(coc-git-chunk-inner)
-xmap ig <Plug>(coc-git-chunk-inner)
-omap ag <Plug>(coc-git-chunk-outer)
-xmap ag <Plug>(coc-git-chunk-outer)
-
-function! LightlineGitBlame() abort
-  let blame = get(b:, 'coc_git_blame', '')
-  " return blame
-  return winwidth(0) > 120 ? blame : ''
-endfunction
+" lazygit
+let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
 
 " FullScreen
 let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1)"

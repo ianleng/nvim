@@ -1,14 +1,30 @@
 {
 	"coc.preferences.extensionUpdateCheck": "daily",
+	"coc.preferences.formatOnSaveFiletypes": [
+		"json",
+		"python"
+	],
 	"suggest.noselect": true,
 	"suggest.enablePreselect": false,
-
 	"python.linting.enabled": true,
 	"python.linting.pylintEnabled": true,
-
 	"snippets.ultisnips.directories": [
 		"UltiSnips"
 	],
-
-	"explorer.file.showHiddenFiles": true
+	"explorer.file.showHiddenFiles": true,
+	"explorer.icon.enableNerdfont": true,
+	"explorer.sources": [
+		{
+			"name": "buffer",
+			"expand": false
+		},
+		{
+			"name": "file",
+			"expand": true
+		}
+	],
+	"json.format.enable": true,
+	"translator.engines": [
+		"bing"
+	]
 }
