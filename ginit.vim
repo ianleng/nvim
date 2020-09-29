@@ -25,5 +25,5 @@ if exists('g:GuiLoaded')
 "    cnoremap <silent> <S-Insert> <C-R>+
 
     " For Windows, Ctrl-6 does not work. So we use this mapping instead.
-"    nnoremap <silent> <C-6> <C-^>
+    nnoremap <silent> <C-6> <C-^>
 endif

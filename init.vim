@@ -22,9 +22,19 @@ noremap Y "+y
 noremap P "+p
 noremap <leader>nh :nohlsearch<cr>
 noremap <leader>ii :source $MYVIMRC<cr>
-noremap <c-j> 10j
-noremap <c-k> 10k
+"noremap <c-j> 10j
+"noremap <c-k> 10k
 map <leader>sc :set spell!<cr>
+map <leader>tt :tabnew<cr>:term<cr>
+"map <leader>tt :call Openterm()<CR>
+"function! Openterm() abort
+"  let currdir = getcwd()
+"  "let netrwdir = fnamemodify(b:netrw_curdir, ':t')
+"  "execute 'lcd '.netrwdir
+"  execute 'tabnew'
+"  execute 'terminal'
+"  execute 'lcd '.currdir
+"endfunction
 
 " Split setting
 map sr :set splitright<cr>:vsplit<cr>
@@ -49,7 +59,7 @@ if has("win32")
     set shell=powershell.exe
     set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
     set shellpipe=|
-    set shellredir=>
+    "set shellredir=>
 endif
 
 " =======================
