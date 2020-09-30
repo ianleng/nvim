@@ -26,6 +26,7 @@ noremap <leader>ii :source $MYVIMRC<cr>
 "noremap <c-k> 10k
 map <leader>sc :set spell!<cr>
 map <leader>tt :tabnew<cr>:term<cr>
+map <leader>tb :tabclose<cr>
 "map <leader>tt :call Openterm()<CR>
 "function! Openterm() abort
 "  let currdir = getcwd()
@@ -56,7 +57,8 @@ map <right> :vertical resize+5<cr>
 " For Windows
 " =======================
 if has("win32")
-    set shell=powershell.exe
+    "set shell=powershell.exe
+    set shell=cmd.exe
     set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
     set shellpipe=|
     "set shellredir=>
@@ -77,9 +79,11 @@ Plug 'itchyny/lightline.vim'
 Plug 'relastle/bluewery.vim'
 Plug 'itchyny/vim-cursorword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'puremourning/vimspector'
 Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
 Plug 'rakr/vim-one'
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -89,7 +93,6 @@ let g:coc_global_extensions = [
 	\ 'coc-explorer',
 	\ 'coc-yank',
 	\ 'coc-git',
-	\ 'coc-list',
 	\ 'coc-python',
 	\ 'coc-snippets',
 	\ 'coc-explorer',
@@ -100,7 +103,10 @@ let g:coc_global_extensions = [
 " =======================
 " Plug Setting
 " =======================
+
+" ------------
 " theme
+" ------------
 "let g:seoul256_background = 235
 "let g:seoul256_srgb = 1
 "colo seoul256
@@ -111,25 +117,88 @@ set background=dark
 
 let g:lightline = {'colorscheme': 'powerline'}
 
+" ------------
+" fzf
+" ------------
+" Layout
+"let g:fzf_layout =
+"\ {'up':'~90%', 'window':
+"    \ {
+"        \ 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5,
+"        \ 'highlight': 'Todo', 'border': 'sharp'
+"    \ }
+"\ }
+"
+"" Color
+"let g:fzf_colors =
+"\ {
+"    \ 'fg':      ['fg', 'Normal'],
+"    \ 'bg':      ['bg', 'Normal'],
+"    \ 'hl':      ['fg', 'Comment'],
+"    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+"    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+"    \ 'hl+':     ['fg', 'Statement'],
+"    \ 'info':    ['fg', 'PreProc'],
+"    \ 'border':  ['fg', 'Ignore'],
+"    \ 'prompt':  ['fg', 'Conditional'],
+"    \ 'pointer': ['fg', 'Exception'],
+"    \ 'marker':  ['fg', 'Keyword'],
+"    \ 'spinner': ['fg', 'Label'],
+"    \ 'header':  ['fg', 'Comment']
+"\ }
+"
+"let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
+"let $FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**'"
+"let g:fzf_buffers_jump = 1
+let g:fzf_preview_window = 'right:60%'
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
+" ------------
+" vimspector
+" ------------
+"if has("win32")
+"    set json_path='~\AppData\Local\nvim\sample_vimspector_json'
+"endif
+let g:vimspector_enable_mappings = 'HUMAN'
+function! s:read_template_into_buffer(template)
+	" has to be a function to avoid the extra space fzf#run insers otherwise
+	execute '0r $HOME\AppData\Local\nvim\sample_vimspector_json\'.a:template
+	"execute '0r c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json\'.a:template
+endfunction
+command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
+			\   'source': 'dir /b c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json',
+			\   'down': 20,
+			\   'sink': function('<sid>read_template_into_buffer')
+			\ })
+noremap <leader>db :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+sign define vimspectorBP text=☛ texthl=Normal
+sign define vimspectorBPDisabled text=☞ texthl=Normal
+sign define vimspectorPC text=🔶 texthl=SpellBad
+
+" ------------
 " coc-translator
 " popup
+" ------------
 nmap <leader>ts <Plug>(coc-translator-p)
 
+" ------------
 " lazygit
+" ------------
 let g:lazygit_floating_window_winblend = 0 " transparency of floating window
 let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
 
+" ------------
 " FullScreen
+" ------------
 let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1)"
 let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)"
 
-" Vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
-"packadd! vimspector
-syntax enable
-filetype plugin indent on
-let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-python', 'CodeLLDB' ]
 
+" ------------
+" COC
+" ------------
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -284,9 +353,13 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" ------------
 " coc-explorer
+" ------------
 nmap <space>e :CocCommand explorer<CR>
 
+" ------------
 " coc-yank
+" ------------
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
