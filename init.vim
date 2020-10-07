@@ -2,6 +2,7 @@
 " Genernal Setting
 " =======================
 exec "nohlsearch"
+set autochdir
 set encoding=utf-8
 set number
 set relativenumber
@@ -18,7 +19,7 @@ set softtabstop=2
 let mapleader="\<SPACE>"
 
 vnoremap Y "+y
-noremap Y "+y
+"noremap Y "+y
 noremap P "+p
 noremap <leader>nh :nohlsearch<cr>
 noremap <leader>ii :source $MYVIMRC<cr>
@@ -38,10 +39,10 @@ map <leader>tb :tabclose<cr>
 "endfunction
 
 " Split setting
-map sr :set splitright<cr>:vsplit<cr>
-map sl :set nosplitright<cr>:vsplit<cr>
-map su :set nosplitbelow<cr>:split<cr>
-map sd :set splitbelow<cr>:split<cr>
+noremap <Leader>sr :set splitright<cr>:vsplit<cr>
+noremap <Leader>sl :set nosplitright<cr>:vsplit<cr>
+noremap <Leader>su :set nosplitbelow<cr>:split<cr>
+noremap <Leader>sd :set splitbelow<cr>:split<cr>
 
 noremap <leader>wh <c-w>h
 noremap <leader>wj <c-w>j
@@ -72,10 +73,11 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
-"Plug 'preservim/nerdtree'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
-Plug 'itchyny/lightline.vim'
+Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'bling/vim-bufferline'
+"Plug 'itchyny/lightline.vim'
 Plug 'relastle/bluewery.vim'
 Plug 'itchyny/vim-cursorword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -84,18 +86,19 @@ Plug 'rakr/vim-one'
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
+" nerdtree icon
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
 " coc plugin
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
-	\ 'coc-explorer',
 	\ 'coc-yank',
 	\ 'coc-git',
 	\ 'coc-python',
 	\ 'coc-snippets',
-	\ 'coc-explorer',
 	\ 'coc-bookmark',
 	\ 'coc-translator',
 	\ 'coc-json']"
@@ -107,16 +110,35 @@ let g:coc_global_extensions = [
 " ------------
 " theme
 " ------------
-"let g:seoul256_background = 235
-"let g:seoul256_srgb = 1
-"colo seoul256
+let g:seoul256_background = 235
+let g:seoul256_srgb = 1
+colo seoul256
 "colo deus
 "colo bluewery
-colorscheme one
-set background=dark
+"colorscheme one
+"set background=dark
 
-let g:lightline = {'colorscheme': 'powerline'}
+" ------------
+" nerdtree
+" ------------
+map <Leader>nt :NERDTreeToggle<CR>
 
+"open a NERDTree automatically when vim starts up
+autocmd vimenter * NERDTree
+
+"close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" ------------
+" airline
+" ------------
+"let g:lightline = {'colorscheme': 'powerline'}
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+let g:bufferline_modified = '*'
 " ------------
 " fzf
 " ------------
@@ -150,6 +172,9 @@ let g:lightline = {'colorscheme': 'powerline'}
 "let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
 "let $FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**'"
 "let g:fzf_buffers_jump = 1
+noremap <silent> <Leader>h :History<CR>
+noremap <silent> <Leader>l :Lines<CR>
+noremap <silent> <Leader>b :Buffers<CR>
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
@@ -164,11 +189,12 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 let g:vimspector_enable_mappings = 'HUMAN'
 function! s:read_template_into_buffer(template)
 	" has to be a function to avoid the extra space fzf#run insers otherwise
-	execute '0r $HOME\AppData\Local\nvim\sample_vimspector_json\'.a:template
+	execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
+	"execute '0r $HOME\AppData\Local\nvim\sample_vimspector_json\'.a:template
 	"execute '0r c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json\'.a:template
 endfunction
 command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
-			\   'source': 'dir /b c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json',
+			\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
 			\   'down': 20,
 			\   'sink': function('<sid>read_template_into_buffer')
 			\ })
@@ -356,7 +382,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " ------------
 " coc-explorer
 " ------------
-nmap <space>e :CocCommand explorer<CR>
+"nmap <space>e :CocCommand explorer<CR>
 
 " ------------
 " coc-yank
