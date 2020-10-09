@@ -1,28 +1,87 @@
 " =======================
 " Genernal Setting
 " =======================
+let &t_ut=''
 exec "nohlsearch"
 set autochdir
+set autoindent
 set encoding=utf-8
 set number
 set relativenumber
 set mouse=a
 set list
+set listchars=tab:\|\ ,trail:▫
 set cursorline
 set wrap
 set ignorecase
 set smartcase
 set scrolloff=5
-set tabstop=2
-set softtabstop=2
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set termguicolors
+set hidden
+set ttimeoutlen=0
+set notimeout
+set foldmethod=indent
+set foldlevel=99
+set foldenable
+set formatoptions-=tc
+set splitright
+set splitbelow
+set noshowmode
+set showcmd
+set wildmenu
+set ttyfast "should make scrolling faster
+set lazyredraw "same as above
+set visualbell
+silent !mkdir -p ~/.config/nvim/tmp/backup
+silent !mkdir -p ~/.config/nvim/tmp/undo
+"silent !mkdir -p ~/.config/nvim/tmp/sessions
+set backupdir=~/.config/nvim/tmp/backup,.
 
+if has('persistent_undo')
+	set undofile
+	set undodir=~/.config/nvim/tmp/undo,.
+endif
+set colorcolumn=100
+set updatetime=100
+set virtualedit=block
+
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" =======================
+" Mapping
+" =======================
 let mapleader="\<SPACE>"
+noremap ; :
 
+" Save & quit
+noremap Q :q<CR>
+noremap <C-q> :qa<CR>
+noremap S :w<CR>
+
+" Copy & Paste
 vnoremap Y "+y
 "noremap Y "+y
 noremap P "+p
+
+" Search
+noremap <LEADER><CR> :nohlsearch<CR>
 noremap <leader>nh :nohlsearch<cr>
+
+" Adjacent duplicate words
+noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
 noremap <leader>ii :source $MYVIMRC<cr>
+noremap <leader>ie :edit $MYVIMRC<cr>
+
+" Search
+noremap <LEADER><CR> :nohlsearch<CR>
+
+" Adjacent duplicate words
+noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
+
 "noremap <c-j> 10j
 "noremap <c-k> 10k
 map <leader>sc :set spell!<cr>
@@ -38,11 +97,15 @@ map <leader>tb :tabclose<cr>
 "  execute 'lcd '.currdir
 "endfunction
 
+" Disable the default s key
+noremap s <nop>
+
 " Split setting
-noremap <Leader>sr :set splitright<cr>:vsplit<cr>
-noremap <Leader>sl :set nosplitright<cr>:vsplit<cr>
-noremap <Leader>su :set nosplitbelow<cr>:split<cr>
-noremap <Leader>sd :set splitbelow<cr>:split<cr>
+noremap sr :set splitright<cr>:vsplit<cr>
+noremap sl :set nosplitright<cr>:vsplit<cr>
+noremap su :set nosplitbelow<cr>:split<cr>
+noremap sb :set splitbelow<cr>:split<cr>
+
 
 noremap <leader>wh <c-w>h
 noremap <leader>wj <c-w>j
@@ -53,6 +116,69 @@ map <up> :res +5<cr>
 map <down> :res -5<cr>
 map <left> :vertical resize-5<cr>
 map <right> :vertical resize+5<cr>
+
+" =======================
+" Tab movement
+" =======================
+" Create a new tab with tu
+noremap tu :tabe<CR>
+" Move around tabs with tn and ti
+noremap tp :-tabnext<CR>
+noremap tn :+tabnext<CR>
+" Move the tabs with tmn and tmi
+noremap tmp :-tabmove<CR>
+noremap tmn :+tabmove<CR>
+
+" =======================
+" Tab movement
+" =======================
+" Auto change directory to current dir
+autocmd BufEnter * silent! lcd %:p:h
+
+" =======================
+" Compile function
+" =======================
+noremap <Leader>r :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+	exec "w"
+	if &filetype == 'c'
+		exec "!g++ % -o %<"
+		exec "!time ./%<"
+	elseif &filetype == 'cpp'
+		set splitbelow
+		exec "!g++ -std=c++11 % -Wall -o %<"
+		:sp
+		:res -15
+		:term ./%<
+	elseif &filetype == 'java'
+		exec "!javac %"
+		exec "!time java %<"
+	elseif &filetype == 'sh'
+		:!time bash %
+	elseif &filetype == 'python'
+		set splitbelow
+		:sp
+		:term python3 %
+	elseif &filetype == 'html'
+		silent! exec "!".g:mkdp_browser." % &"
+	elseif &filetype == 'markdown'
+		exec "InstantMarkdownPreview"
+	elseif &filetype == 'tex'
+		silent! exec "VimtexStop"
+		silent! exec "VimtexCompile"
+	elseif &filetype == 'dart'
+		exec "CocCommand flutter.run -d ".g:flutter_default_device
+		silent! exec "CocCommand flutter.dev.openDevLog"
+	elseif &filetype == 'javascript'
+		set splitbelow
+		:sp
+		:term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
+	elseif &filetype == 'go'
+		set splitbelow
+		:sp
+		:term go run .
+	endif
+endfunc
 
 " =======================
 " For Windows
@@ -110,21 +236,23 @@ let g:coc_global_extensions = [
 " ------------
 " theme
 " ------------
-let g:seoul256_background = 235
-let g:seoul256_srgb = 1
-colo seoul256
+"let g:seoul256_background = 235
+"let g:seoul256_srgb = 1
+"colo seoul256
 "colo deus
 "colo bluewery
-"colorscheme one
+colorscheme one
 "set background=dark
+
+"hi Normal guibg=NONE ctermbg=NONE
 
 " ------------
 " nerdtree
 " ------------
-map <Leader>nt :NERDTreeToggle<CR>
+nmap tt :NERDTreeToggle<CR>
 
 "open a NERDTree automatically when vim starts up
-autocmd vimenter * NERDTree
+"autocmd vimenter * NERDTree
 
 "close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
