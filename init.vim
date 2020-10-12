@@ -199,7 +199,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
-Plug 'preservim/nerdtree'
+"Plug 'preservim/nerdtree' |
+"            \ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
@@ -216,6 +217,13 @@ Plug 'tpope/vim-fugitive'
 " nerdtree icon
 Plug 'ryanoasis/vim-devicons'
 Plug 'liuchengxu/vista.vim'
+" Ranger
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
+
+Plug 'mbbill/undotree'
+
+"Plug 'mg979/vim-xtabline'
 
 call plug#end()
 
@@ -223,7 +231,8 @@ call plug#end()
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
 	\ 'coc-yank',
-	\ 'coc-git',
+    \ 'coc-explorer',
+    \ 'coc-git',
 	\ 'coc-python',
 	\ 'coc-snippets',
 	\ 'coc-bookmark',
@@ -250,22 +259,40 @@ colorscheme one
 " ------------
 " nerdtree
 " ------------
-nmap tt :NERDTreeToggle<CR>
+"nmap tt :NERDTreeToggle<CR>
 
 "open a NERDTree automatically when vim starts up
 "autocmd vimenter * NERDTree
 
 "close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" ------------
+" nerdtree git
+" ------------
+"let g:NERDTreeGitStatusIndicatorMapCustom = {
+"                \ 'Modified'  :'✹',
+"                \ 'Staged'    :'✚',
+"                \ 'Untracked' :'✭',
+"                \ 'Renamed'   :'➜',
+"                \ 'Unmerged'  :'═',
+"                \ 'Deleted'   :'✖',
+"                \ 'Dirty'     :'✗',
+"                \ 'Ignored'   :'☒',
+"                \ 'Clean'     :'✔︎',
+"                \ 'Unknown'   :'?',
+"                \ }
+"
+"let g:NERDTreeGitStatusUseNerdFonts = 1 " you should install nerdfonts by yourself. default: 0
 
 " ------------
 " airline
 " ------------
 "let g:lightline = {'colorscheme': 'powerline'}
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+"let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:bufferline_modified = '*'
 " ------------
@@ -301,13 +328,20 @@ let g:bufferline_modified = '*'
 "let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
 "let $FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**'"
 "let g:fzf_buffers_jump = 1
+noremap <silent> <Leader>b :Buffers<CR>
 noremap <silent> <Leader>h :History<CR>
 noremap <silent> <Leader>l :Lines<CR>
-noremap <silent> <Leader>b :Buffers<CR>
+
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
+" ------------
+" vimspector
+" ------------
+
+nnoremap <c-l> :UndotreeToggle<cr>
 
 " ------------
 " vimspector
@@ -566,7 +600,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " ------------
 " coc-explorer
 " ------------
-"nmap <space>e :CocCommand explorer<CR>
+nmap <LEADER>e :CocCommand explorer<CR>
 
 " ------------
 " coc-yank
