@@ -8,7 +8,7 @@ if exists('g:GuiLoaded')
 		GuiFont Consolas:h10
     function! AdjustFontSize(amount)
       let s:fontsize = s:fontsize+a:amount
-      :execute "GuiFont! Consolas:h" . s:fontsize
+"      :execute "GuiFont! Consolas:h" . s:fontsize
     endfunction
     
     noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>

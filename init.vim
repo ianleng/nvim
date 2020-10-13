@@ -295,6 +295,7 @@ let g:airline#extensions#tabline#enabled = 1
 "let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:bufferline_modified = '*'
+let g:bufferline_echo = 0
 " ------------
 " fzf
 " ------------
