@@ -22,8 +22,8 @@ set softtabstop=4
 set shiftwidth=4
 set termguicolors
 set hidden
-set ttimeoutlen=0
-set notimeout
+"set ttimeoutlen=0
+"set notimeout
 set foldmethod=indent
 set foldlevel=99
 set foldenable
@@ -199,8 +199,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
-"Plug 'preservim/nerdtree' |
-"            \ Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'preservim/nerdtree' |
+            \ Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'preservim/nerdcommenter'
+Plug 'preservim/tagbar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
@@ -216,7 +218,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 " nerdtree icon
 Plug 'ryanoasis/vim-devicons'
-Plug 'liuchengxu/vista.vim'
+"Plug 'liuchengxu/vista.vim'
 " Ranger
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
@@ -231,8 +233,6 @@ call plug#end()
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
 	\ 'coc-yank',
-    \ 'coc-explorer',
-    \ 'coc-git',
 	\ 'coc-python',
 	\ 'coc-snippets',
 	\ 'coc-bookmark',
@@ -246,12 +246,12 @@ let g:coc_global_extensions = [
 " ------------
 " theme
 " ------------
-"let g:seoul256_background = 235
-"let g:seoul256_srgb = 1
-"colo seoul256
+let g:seoul256_background = 235
+let g:seoul256_srgb = 1
+colo seoul256
 "colo deus
 "colo bluewery
-colorscheme one
+"colorscheme one
 "set background=dark
 
 "hi Normal guibg=NONE ctermbg=NONE
@@ -259,43 +259,49 @@ colorscheme one
 " ------------
 " nerdtree
 " ------------
-"nmap tt :NERDTreeToggle<CR>
+nmap tt :NERDTreeToggle<CR>
 
 "open a NERDTree automatically when vim starts up
-"autocmd vimenter * NERDTree
+autocmd vimenter * NERDTree
 
 "close vim if the only window left open is a NERDTree
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ------------
 " nerdtree git
 " ------------
-"let g:NERDTreeGitStatusIndicatorMapCustom = {
-"                \ 'Modified'  :'✹',
-"                \ 'Staged'    :'✚',
-"                \ 'Untracked' :'✭',
-"                \ 'Renamed'   :'➜',
-"                \ 'Unmerged'  :'═',
-"                \ 'Deleted'   :'✖',
-"                \ 'Dirty'     :'✗',
-"                \ 'Ignored'   :'☒',
-"                \ 'Clean'     :'✔︎',
-"                \ 'Unknown'   :'?',
-"                \ }
-"
-"let g:NERDTreeGitStatusUseNerdFonts = 1 " you should install nerdfonts by yourself. default: 0
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✹',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'✭',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
+
+let g:NERDTreeGitStatusUseNerdFonts = 1 " you should install nerdfonts by yourself. default: 0
 
 " ------------
 " airline
 " ------------
 "let g:lightline = {'colorscheme': 'powerline'}
-let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
 "let g:airline#extensions#tabline#left_sep = ' '
 "let g:airline#extensions#tabline#left_alt_sep = '|'
 "let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:bufferline_modified = '*'
 let g:bufferline_echo = 0
+
+" ------------
+" tagbar
+" ------------
+
+nmap tb :TagbarToggle<CR>
 " ------------
 " fzf
 " ------------
@@ -329,9 +335,9 @@ let g:bufferline_echo = 0
 "let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
 "let $FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**'"
 "let g:fzf_buffers_jump = 1
-noremap <silent> <Leader>b :Buffers<CR>
-noremap <silent> <Leader>h :History<CR>
-noremap <silent> <Leader>l :Lines<CR>
+noremap <silent> fb :Buffers<CR>
+noremap <silent> fh :History<CR>
+noremap <silent> fl :Lines<CR>
 
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
@@ -371,7 +377,7 @@ sign define vimspectorPC text=🔶 texthl=SpellBad
 " coc-translator
 " popup
 " ------------
-nmap <leader>ts <Plug>(coc-translator-p)
+nmap ts <Plug>(coc-translator-p)
 
 " ------------
 " lazygit
@@ -388,58 +394,58 @@ let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)
 " ------------
 " Vista
 " ------------
-noremap <LEADER>vv :Vista<CR>
-noremap <Leader>vs :Vista finder<CR>
-"function! NearestMethodOrFunction() abort
-"  return get(b:, 'vista_nearest_method_or_function', '')
-"endfunction
-"
-"set statusline+=%{NearestMethodOrFunction()}
+"noremap <LEADER>vv :Vista<CR>
+"noremap <Leader>vs :Vista finder<CR>
+""function! NearestMethodOrFunction() abort
+""  return get(b:, 'vista_nearest_method_or_function', '')
+""endfunction
+""
+""set statusline+=%{NearestMethodOrFunction()}
 
-" By default vista.vim never run if you don't call it explicitly.
-"
-" If you want to show the nearest function in your statusline automatically,
-" you can add the following line to your vimrc
-"autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+"" By default vista.vim never run if you don't call it explicitly.
+""
+"" If you want to show the nearest function in your statusline automatically,
+"" you can add the following line to your vimrc
+""autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 
-" How each level is indented and what to prepend.
-" This could make the display more compact or more spacious.
-" e.g., more compact: ["▸ ", ""]
-" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
-let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+"" How each level is indented and what to prepend.
+"" This could make the display more compact or more spacious.
+"" e.g., more compact: ["▸ ", ""]
+"" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
+"let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 
-" Executive used when opening vista sidebar without specifying it.
-" See all the avaliable executives via `:echo g:vista#executives`.
-let g:vista_default_executive = 'ctags'
+"" Executive used when opening vista sidebar without specifying it.
+"" See all the avaliable executives via `:echo g:vista#executives`.
+"let g:vista_default_executive = 'ctags'
 
-" Set the executive for some filetypes explicitly. Use the explicit executive
-" instead of the default one for these filetypes when using `:Vista` without
-" specifying the executive.
-let g:vista_executive_for = {
-  \ 'cpp': 'vim_lsp',
-  \ 'php': 'vim_lsp',
-  \ }
+"" Set the executive for some filetypes explicitly. Use the explicit executive
+"" instead of the default one for these filetypes when using `:Vista` without
+"" specifying the executive.
+"let g:vista_executive_for = {
+  "\ 'cpp': 'vim_lsp',
+  "\ 'php': 'vim_lsp',
+  "\ }
 
-" Declare the command including the executable and options used to generate ctags output
-" for some certain filetypes.The file path will be appened to your custom command.
-" For example:
-let g:vista_ctags_cmd = {
-      \ 'haskell': 'hasktags -x -o - -c',
-      \ }
+"" Declare the command including the executable and options used to generate ctags output
+"" for some certain filetypes.The file path will be appened to your custom command.
+"" For example:
+"let g:vista_ctags_cmd = {
+      "\ 'haskell': 'hasktags -x -o - -c',
+      "\ }
 
-" To enable fzf's preview window set g:vista_fzf_preview.
-" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
-" For example:
-let g:vista_fzf_preview = ['right:50%']
+"" To enable fzf's preview window set g:vista_fzf_preview.
+"" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+"" For example:
+"let g:vista_fzf_preview = ['right:50%']
 
-" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
-let g:vista#renderer#enable_icon = 1
+"" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+"let g:vista#renderer#enable_icon = 1
 
-" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
-let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
-\  }
+"" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
+"let g:vista#renderer#icons = {
+"\   "function": "\uf794",
+"\   "variable": "\uf71b",
+"\  }
 
 " ------------
 " COC
@@ -601,7 +607,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " ------------
 " coc-explorer
 " ------------
-nmap <LEADER>e :CocCommand explorer<CR>
+"nmap <LEADER>e :CocCommand explorer<CR>
 
 " ------------
 " coc-yank
