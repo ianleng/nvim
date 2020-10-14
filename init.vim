@@ -85,7 +85,7 @@ noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
 "noremap <c-j> 10j
 "noremap <c-k> 10k
 map <leader>sc :set spell!<cr>
-map <leader>tt :tabnew<cr>:term<cr>
+map <leader>tt ::set splitbelow<cr>:split<cr>:term<cr>
 map <leader>tb :tabclose<cr>
 "map <leader>tt :call Openterm()<CR>
 "function! Openterm() abort
@@ -105,7 +105,6 @@ noremap sr :set splitright<cr>:vsplit<cr>
 noremap sl :set nosplitright<cr>:vsplit<cr>
 noremap su :set nosplitbelow<cr>:split<cr>
 noremap sb :set splitbelow<cr>:split<cr>
-
 
 noremap <leader>wh <c-w>h
 noremap <leader>wj <c-w>j
@@ -130,7 +129,7 @@ noremap tmp :-tabmove<CR>
 noremap tmn :+tabmove<CR>
 
 " =======================
-" Tab movement
+" Directory
 " =======================
 " Auto change directory to current dir
 autocmd BufEnter * silent! lcd %:p:h
@@ -196,40 +195,50 @@ endif
 " =======================
 call plug#begin('~/.vim/plugged')
 
+" UI
 Plug 'junegunn/seoul256.vim'
-Plug 'ajmwagar/vim-deus'
 Plug 'lambdalisue/vim-fullscreen'
+
+" IDE
 Plug 'preservim/nerdtree' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin'
+            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
+            \ Plug 'ryanoasis/vim-devicons'
 Plug 'preservim/nerdcommenter'
-Plug 'preservim/tagbar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
-"Plug 'itchyny/lightline.vim'
-Plug 'relastle/bluewery.vim'
-Plug 'itchyny/vim-cursorword'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
-Plug 'rakr/vim-one'
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'bling/vim-bufferline'
+"Plug 'itchyny/vim-cursorword'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'mbbill/undotree'
+Plug 'qpkorr/vim-bufkill'
+
+" Direction
+Plug 'easymotion/vim-easymotion'
+Plug 'RRethy/vim-illuminate'
+Plug 'tpope/vim-surround'
+Plug 'liuchengxu/vista.vim'
+
+" Git
 Plug 'tpope/vim-fugitive'
-" nerdtree icon
-Plug 'ryanoasis/vim-devicons'
-"Plug 'liuchengxu/vista.vim'
+Plug 'airblade/vim-gitgutter'
+
+" Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 " Ranger
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 
-Plug 'mbbill/undotree'
-
-"Plug 'mg979/vim-xtabline'
+" Funny
+Plug 'junegunn/goyo.vim'
 
 call plug#end()
 
+" =======================
 " coc plugin
+" =======================
 let g:coc_global_extensions = [
 	\ 'coc-vimlsp',
 	\ 'coc-yank',
@@ -248,12 +257,10 @@ let g:coc_global_extensions = [
 " ------------
 let g:seoul256_background = 235
 let g:seoul256_srgb = 1
-colo seoul256
-"colo deus
-"colo bluewery
-"colorscheme one
 "set background=dark
+colo seoul256
 
+" Opacity
 "hi Normal guibg=NONE ctermbg=NONE
 
 " ------------
@@ -266,6 +273,12 @@ autocmd vimenter * NERDTree
 
 "close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"close buffer
+nmap <c-x> :BD<CR>
+
+" vim-illuminate black list
+let g:Illuminate_ftblacklist = ['nerdtree']
 
 " ------------
 " nerdtree git
@@ -288,53 +301,77 @@ let g:NERDTreeGitStatusUseNerdFonts = 1 " you should install nerdfonts by yourse
 " ------------
 " airline
 " ------------
-"let g:lightline = {'colorscheme': 'powerline'}
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#left_sep = ' '
-"let g:airline#extensions#tabline#left_alt_sep = '|'
-"let g:airline#extensions#tabline#formatter = 'unique_tail'
-
 let g:bufferline_modified = '*'
 let g:bufferline_echo = 0
 
 " ------------
 " tagbar
 " ------------
-
 nmap tb :TagbarToggle<CR>
+
+" ------------
+" easymotion
+" ------------
+" Move to word
+map  \w <Plug>(easymotion-bd-w)
+nmap \w <Plug>(easymotion-overwin-w)
+
+" Move to line
+map \l <Plug>(easymotion-bd-jk)
+nmap \l <Plug>(easymotion-overwin-line)
+
+" <Leader>f{char} to move to {char}
+map  \f <Plug>(easymotion-bd-f)
+nmap \f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap \s <Plug>(easymotion-overwin-f2)
+
+" ------------
+" vista
+" ------------
+noremap <leader>vv :Vista coc<cr>
+" How each level is indented and what to prepend.
+" This could make the display more compact or more spacious.
+" e.g., more compact: ["▸ ", ""]
+" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+
+" Executive used when opening vista sidebar without specifying it.
+" See all the avaliable executives via `:echo g:vista#executives`.
+let g:vista_default_executive = 'ctags'
+
+" Set the executive for some filetypes explicitly. Use the explicit executive
+" instead of the default one for these filetypes when using `:Vista` without
+" specifying the executive.
+let g:vista_executive_for = {
+  \ 'cpp': 'vim_lsp',
+  \ 'php': 'vim_lsp',
+  \ }
+
+" Declare the command including the executable and options used to generate ctags output
+" for some certain filetypes.The file path will be appened to your custom command.
+" For example:
+let g:vista_ctags_cmd = {
+      \ 'haskell': 'hasktags -x -o - -c',
+      \ }
+
+" To enable fzf's preview window set g:vista_fzf_preview.
+" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" For example:
+let g:vista_fzf_preview = ['right:50%']
+" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+let g:vista#renderer#enable_icon = 1
+
+" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+
 " ------------
 " fzf
 " ------------
-" Layout
-"let g:fzf_layout =
-"\ {'up':'~90%', 'window':
-"    \ {
-"        \ 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5,
-"        \ 'highlight': 'Todo', 'border': 'sharp'
-"    \ }
-"\ }
-"
-"" Color
-"let g:fzf_colors =
-"\ {
-"    \ 'fg':      ['fg', 'Normal'],
-"    \ 'bg':      ['bg', 'Normal'],
-"    \ 'hl':      ['fg', 'Comment'],
-"    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-"    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-"    \ 'hl+':     ['fg', 'Statement'],
-"    \ 'info':    ['fg', 'PreProc'],
-"    \ 'border':  ['fg', 'Ignore'],
-"    \ 'prompt':  ['fg', 'Conditional'],
-"    \ 'pointer': ['fg', 'Exception'],
-"    \ 'marker':  ['fg', 'Keyword'],
-"    \ 'spinner': ['fg', 'Label'],
-"    \ 'header':  ['fg', 'Comment']
-"\ }
-"
-"let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
-"let $FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**'"
-"let g:fzf_buffers_jump = 1
 noremap <silent> fb :Buffers<CR>
 noremap <silent> fh :History<CR>
 noremap <silent> fl :Lines<CR>
@@ -347,7 +384,6 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 " ------------
 " vimspector
 " ------------
-
 nnoremap <c-l> :UndotreeToggle<cr>
 
 " ------------
@@ -392,60 +428,9 @@ let g:fullscreen#start_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 1
 let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)"
 
 " ------------
-" Vista
+" coc-yank
 " ------------
-"noremap <LEADER>vv :Vista<CR>
-"noremap <Leader>vs :Vista finder<CR>
-""function! NearestMethodOrFunction() abort
-""  return get(b:, 'vista_nearest_method_or_function', '')
-""endfunction
-""
-""set statusline+=%{NearestMethodOrFunction()}
-
-"" By default vista.vim never run if you don't call it explicitly.
-""
-"" If you want to show the nearest function in your statusline automatically,
-"" you can add the following line to your vimrc
-""autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-
-"" How each level is indented and what to prepend.
-"" This could make the display more compact or more spacious.
-"" e.g., more compact: ["▸ ", ""]
-"" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
-"let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-
-"" Executive used when opening vista sidebar without specifying it.
-"" See all the avaliable executives via `:echo g:vista#executives`.
-"let g:vista_default_executive = 'ctags'
-
-"" Set the executive for some filetypes explicitly. Use the explicit executive
-"" instead of the default one for these filetypes when using `:Vista` without
-"" specifying the executive.
-"let g:vista_executive_for = {
-  "\ 'cpp': 'vim_lsp',
-  "\ 'php': 'vim_lsp',
-  "\ }
-
-"" Declare the command including the executable and options used to generate ctags output
-"" for some certain filetypes.The file path will be appened to your custom command.
-"" For example:
-"let g:vista_ctags_cmd = {
-      "\ 'haskell': 'hasktags -x -o - -c',
-      "\ }
-
-"" To enable fzf's preview window set g:vista_fzf_preview.
-"" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
-"" For example:
-"let g:vista_fzf_preview = ['right:50%']
-
-"" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
-"let g:vista#renderer#enable_icon = 1
-
-"" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
-"let g:vista#renderer#icons = {
-"\   "function": "\uf794",
-"\   "variable": "\uf71b",
-"\  }
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 " ------------
 " COC
@@ -603,14 +588,4 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-" ------------
-" coc-explorer
-" ------------
-"nmap <LEADER>e :CocCommand explorer<CR>
-
-" ------------
-" coc-yank
-" ------------
-nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
