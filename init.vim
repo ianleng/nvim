@@ -59,13 +59,17 @@ noremap ; :
 
 " Save & quit
 noremap Q :q<CR>
-noremap <C-q> :qa<CR>
+"noremap <C-q> :qa<CR>
 noremap S :w<CR>
 
 " Copy & Paste
 vnoremap Y "+y
 "noremap Y "+y
 noremap P "+p
+
+" Switch buffer
+noremap bn :bnext<cr>
+noremap bp :bprevious<cr>
 
 " Search
 noremap <LEADER><CR> :nohlsearch<CR>
@@ -85,8 +89,11 @@ noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
 "noremap <c-j> 10j
 "noremap <c-k> 10k
 map <leader>sc :set spell!<cr>
-map <leader>tt ::set splitbelow<cr>:split<cr>:term<cr>
+map <leader>tt :tabnew<cr>:term<cr>
+map <leader>bt :set splitbelow<cr>:split<cr>:res -10<cr>:term<cr>
 map <leader>tb :tabclose<cr>
+tnoremap <m-c> <C-\><C-N>
+tnoremap <m-x> <C-\><C-N><C-O>
 "map <leader>tt :call Openterm()<CR>
 "function! Openterm() abort
 "  let currdir = getcwd()
@@ -99,6 +106,7 @@ map <leader>tb :tabclose<cr>
 
 " Disable the default s key
 noremap s <nop>
+noremap b <nop>
 
 " Split setting
 noremap sr :set splitright<cr>:vsplit<cr>
@@ -197,12 +205,13 @@ call plug#begin('~/.vim/plugged')
 
 " UI
 Plug 'junegunn/seoul256.vim'
+Plug 'morhetz/gruvbox'
 Plug 'lambdalisue/vim-fullscreen'
 
 " IDE
-Plug 'preservim/nerdtree' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
-            \ Plug 'ryanoasis/vim-devicons'
+"Plug 'preservim/nerdtree' |
+            "\ Plug 'Xuyuanp/nerdtree-git-plugin' |
+"            \ Plug 'ryanoasis/vim-devicons'
 Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -217,12 +226,12 @@ Plug 'qpkorr/vim-bufkill'
 " Direction
 Plug 'easymotion/vim-easymotion'
 Plug 'RRethy/vim-illuminate'
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-surround'
 Plug 'liuchengxu/vista.vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
 
 " Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -244,9 +253,13 @@ let g:coc_global_extensions = [
 	\ 'coc-yank',
 	\ 'coc-python',
 	\ 'coc-snippets',
+    \ 'coc-explorer',
+    \ 'coc-git',
 	\ 'coc-bookmark',
 	\ 'coc-translator',
 	\ 'coc-json']"
+
+nmap <leader>update :PlugUpgrade<cr>:PlugUpdate<cr>:CocUpdate<cr>
 
 " =======================
 " Plug Setting
@@ -255,48 +268,13 @@ let g:coc_global_extensions = [
 " ------------
 " theme
 " ------------
-let g:seoul256_background = 235
-let g:seoul256_srgb = 1
-"set background=dark
-colo seoul256
+"let g:seoul256_background = 235
+"let g:seoul256_srgb = 1
+"colo seoul256
+colo gruvbox
 
 " Opacity
 "hi Normal guibg=NONE ctermbg=NONE
-
-" ------------
-" nerdtree
-" ------------
-nmap tt :NERDTreeToggle<CR>
-
-"open a NERDTree automatically when vim starts up
-autocmd vimenter * NERDTree
-
-"close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"close buffer
-nmap <c-x> :BD<CR>
-
-" vim-illuminate black list
-let g:Illuminate_ftblacklist = ['nerdtree']
-
-" ------------
-" nerdtree git
-" ------------
-let g:NERDTreeGitStatusIndicatorMapCustom = {
-                \ 'Modified'  :'✹',
-                \ 'Staged'    :'✚',
-                \ 'Untracked' :'✭',
-                \ 'Renamed'   :'➜',
-                \ 'Unmerged'  :'═',
-                \ 'Deleted'   :'✖',
-                \ 'Dirty'     :'✗',
-                \ 'Ignored'   :'☒',
-                \ 'Clean'     :'✔︎',
-                \ 'Unknown'   :'?',
-                \ }
-
-let g:NERDTreeGitStatusUseNerdFonts = 1 " you should install nerdfonts by yourself. default: 0
 
 " ------------
 " airline
@@ -395,15 +373,16 @@ nnoremap <c-l> :UndotreeToggle<cr>
 let g:vimspector_enable_mappings = 'HUMAN'
 function! s:read_template_into_buffer(template)
 	" has to be a function to avoid the extra space fzf#run insers otherwise
-	execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
+	"execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
 	"execute '0r $HOME\AppData\Local\nvim\sample_vimspector_json\'.a:template
-	"execute '0r c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json\'.a:template
+	execute '0r c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json\'.a:template
 endfunction
 command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
-			\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
+			\   'source': 'dir /b c:\Users\qsle\AppData\Local\nvim\sample_vimspector_json',
 			\   'down': 20,
 			\   'sink': function('<sid>read_template_into_buffer')
 			\ })
+			"\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
 noremap <leader>db :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 sign define vimspectorBP text=☛ texthl=Normal
 sign define vimspectorBPDisabled text=☞ texthl=Normal
@@ -415,6 +394,11 @@ sign define vimspectorPC text=🔶 texthl=SpellBad
 " ------------
 nmap ts <Plug>(coc-translator-p)
 
+" ------------
+" coc-explorer
+" ------------
+nmap <leader>e :CocCommand explorer<CR>
+nmap <c-x> :BD<cr>
 " ------------
 " lazygit
 " ------------
@@ -443,7 +427,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
+" set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -575,7 +559,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+"nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
 nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
