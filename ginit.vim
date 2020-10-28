@@ -5,7 +5,7 @@ if exists('g:GuiLoaded')
 "    GuiTabline 0
     GuiTabline 0
     GuiPopupmenu 0
-	GuiFont! Consolas:h10
+	"GuiFont! Consolas:h10
     function! AdjustFontSize(amount)
       let s:fontsize = s:fontsize+a:amount
 "      :execute "GuiFont! Consolas:h" . s:fontsize
