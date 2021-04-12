@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='D:/QSLE/Neovim/bin'
+let g:netrw_dirhist_6='D:\QSLE\Neovim\bin'
+let g:netrw_dirhist_5='D:/QSLE/Neovim/bin'
+let g:netrw_dirhist_4='D:/QSLE/ranger'
+let g:netrw_dirhist_3='D:/QSLE'
+let g:netrw_dirhist_2='D:/QSLE/Neovim'
+let g:netrw_dirhist_1='D:/QSLE/Neovim/bin'
