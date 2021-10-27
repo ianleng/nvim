@@ -5,7 +5,6 @@ call plug#begin('~/.vim/plugged')
 
 " UI
 Plug 'morhetz/gruvbox'
-Plug 'lambdalisue/vim-fullscreen'
 
 " IDE
 Plug 'preservim/nerdtree' |
@@ -15,7 +14,7 @@ Plug 'preservim/nerdtree' |
 Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'bling/vim-bufferline'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -43,18 +42,18 @@ Plug 'honza/vim-snippets'
 Plug 'easymotion/vim-easymotion'
 Plug 'RRethy/vim-illuminate'
 Plug 'tpope/vim-surround'
-Plug 'liuchengxu/vista.vim'
+"Plug 'liuchengxu/vista.vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
 
 " Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Ranger
 "Plug 'francoiscabrol/ranger.vim'
-Plug 'rbgrouleff/bclose.vim'
+"Plug 'rbgrouleff/bclose.vim'
 
 " Funny
 "Plug 'junegunn/goyo.vim'
@@ -64,14 +63,139 @@ call plug#end()
 "=======================
 " coc plugin
 "=======================
-let g:coc_global_extensions = [
-			\ 'coc-vimlsp',
-			\ 'coc-yank',
-			\ 'coc-snippets',
-			\ 'coc-pyright',
-			\ 'coc-translator',
-			\ 'coc-prettier',
-			\ 'coc-json']"
+"let g:coc_global_extensions = [
+"			\ 'coc-vimlsp',
+"			\ 'coc-yank',
+"			\ 'coc-snippets',
+"			\ 'coc-pyright',
+"			\ 'coc-translator',
+"			\ 'coc-prettier',
+"			\ 'coc-json']"
+
+
+" FEATURES TO COVER:
+" - Fuzzy File Search
+" - Tag jumping
+" - Autocomplete
+" - File Browsing
+" - Snippets
+" - Build Integration (if we have time)
+
+" GOALS OF THIS TALK:
+" - Increase Vim understanding
+" - Offer powerful options
+
+" NOT GOALS OF THIS TALK:
+" - Hate on plugins
+" - Get people to stop using plugins
+
+" {{{ BASIC SETUP
+" BASIC SETUP:
+
+" enter the current millenium
+set nocompatible
+
+" enable syntax and plugins (for netrw)
+syntax enable
+filetype plugin on
+
+" FINDING FILES:
+
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
+
+" Display all matching files when we tab complete
+set wildmenu
+
+" NOW WE CAN:
+" - Hit tab to :find by partial match
+" - Use * to make it fuzzy
+
+" THINGS TO CONSIDER:
+" - :b lets you autocomplete any open buffer
+
+" TAG JUMPING:
+
+" Create the `tags` file (may need to install ctags first)
+command! MakeTags !ctags -R .
+
+" NOW WE CAN:
+" - Use ^] to jump to tag under cursor
+" - Use g^] for ambiguous tags
+" - Use ^t to jump back up the tag stack
+
+" THINGS TO CONSIDER:
+" - This doesn't help if you want a visual list of tags
+
+
+
+
+
+" AUTOCOMPLETE:
+
+" The good stuff is documented in |ins-completion|
+
+" HIGHLIGHTS:
+" - ^x^n for JUST this file
+" - ^x^f for filenames (works with our path trick!)
+" - ^x^] for tags only
+" - ^n for anything specified by the 'complete' option
+
+" NOW WE CAN:
+" - Use ^n and ^p to go back and forth in the suggestion list
+
+
+
+
+
+" FILE BROWSING:
+
+" Tweaks for browsing
+let g:netrw_banner=0        " disable annoying banner
+let g:netrw_browse_split=4  " open in prior window
+let g:netrw_altv=1          " open splits to the right
+let g:netrw_liststyle=3     " tree view
+let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
+
+" NOW WE CAN:
+" - :edit a folder to open a file browser
+" - <CR>/v/t to open in an h-split/v-split/tab
+" - check |netrw-browse-maps| for more mappings
+
+
+
+" SNIPPETS:
+
+" Read an empty HTML template and move cursor to title
+nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a
+
+" NOW WE CAN:
+" - Take over the world!
+"   (with much fewer keystrokes)
+
+
+
+
+
+
+
+
+
+" BUILD INTEGRATION:
+
+" Steal Mr. Bradley's formatter & add it to our spec_helper
+" http://philipbradley.net/rspec-into-vim-with-quickfix
+
+" Configure the `make` command to run RSpec
+set makeprg=bundle\ exec\ rspec\ -f\ QuickfixFormatter
+
+" NOW WE CAN:
+" - Run :make to run RSpec
+" - :cl to list errors
+" - :cc# to jump to error by number
+" - :cn and :cp to navigate forward and back
 
 " =======================
 " Genernal Setting
@@ -235,13 +359,13 @@ endfunc
 " =======================
 " For Windows
 " =======================
-if has("win32")
-	"set shell=powershell.exe
-	set shell=cmd.exe
-	"set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
-	set shellpipe=|
-	"set shellredir=>
-endif
+"if has("win32")
+"	"set shell=powershell.exe
+"	set shell=cmd.exe
+"	"set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
+"	set shellpipe=|
+"	"set shellredir=>
+"endif
 
 " =======================
 " Plug Setting
@@ -250,7 +374,7 @@ endif
 " ------------
 " Theme
 " ------------
-colo gruvbox
+color gruvbox
 
 " Opacity
 "hi Normal guibg=NONE ctermbg=NONE
@@ -329,221 +453,43 @@ let g:fullscreen#stop_command = "call rpcnotify(0, 'Gui', 'WindowFullScreen', 0)
 " ------------
 " Vista
 " ------------
-nnoremap <silent> <Leader>vv :Vista<CR>
-nnoremap <silent> <Leader>vc :Vista!<CR>
-nnoremap <silent> <Leader>vt :Vista!!<CR>
-" How each level is indented and what to prepend.
-" This could make the display more compact or more spacious.
-" e.g., more compact: ["▸ ", ""]
-" Note: this option only works for the kind renderer, not the tree renderer.
-let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-
-" Executive used when opening vista sidebar without specifying it.
-" See all the avaliable executives via `:echo g:vista#executives`.
-let g:vista_default_executive = 'ctags'
-
-" Set the executive for some filetypes explicitly. Use the explicit executive
-" instead of the default one for these filetypes when using `:Vista` without
-" specifying the executive.
-let g:vista_executive_for = {
-			\ 'cpp': 'vim_lsp',
-			\ 'php': 'vim_lsp',
-			\ }
-
-" Declare the command including the executable and options used to generate ctags output
-" for some certain filetypes.The file path will be appened to your custom command.
-" For example:
-let g:vista_ctags_cmd = {
-			\ 'haskell': 'hasktags -x -o - -c',
-			\ }
-
-" To enable fzf's preview window set g:vista_fzf_preview.
-" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
-" For example:
-"let g:vista_fzf_preview = ['right:50%']
-" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
-let g:vista#renderer#enable_icon = 1
-
-" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
-let g:vista#renderer#icons = {
-			\   "function": "\uf794",
-			\   "variable": "\uf71b",
-			\  }
-
-" ------------
-" coc
-" ------------
-" Translator
-nmap ts <Plug>(coc-translator-p)
-
-" coc-prettier
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-
+"nnoremap <silent> <Leader>vv :Vista<CR>
+"nnoremap <silent> <Leader>vc :Vista!<CR>
+"nnoremap <silent> <Leader>vt :Vista!!<CR>
+"" How each level is indented and what to prepend.
+"" This could make the display more compact or more spacious.
+"" e.g., more compact: ["▸ ", ""]
+"" Note: this option only works for the kind renderer, not the tree renderer.
+"let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 "
-" coc-default
+"" Executive used when opening vista sidebar without specifying it.
+"" See all the avaliable executives via `:echo g:vista#executives`.
+"let g:vista_default_executive = 'ctags'
 "
-" Set internal encoding of vim, not needed on neovim, since coc.nvim using some
-" unicode characters in the file autoload/float.vim
-set encoding=utf-8
-
-" TextEdit might fail if hidden is not set.
-set hidden
-
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-"set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-	" Recently vim can merge signcolumn and number column into one
-	set signcolumn=number
-else
-	set signcolumn=yes
-endif
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-			\ pumvisible() ? "\<C-n>" :
-			\ <SID>check_back_space() ? "\<TAB>" :
-			\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-	inoremap <silent><expr> <c-space> coc#refresh()
-else
-	inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-	if (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	elseif (coc#rpc#ready())
-		call CocActionAsync('doHover')
-	else
-		execute '!' . &keywordprg . " " . expand('<cword>')
-	endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-	autocmd!
-	" Setup formatexpr specified filetype(s).
-	autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-	" Update signature help on jump placeholder.
-	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-	nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-	nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-	inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-	inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-	vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-	vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+"" Set the executive for some filetypes explicitly. Use the explicit executive
+"" instead of the default one for these filetypes when using `:Vista` without
+"" specifying the executive.
+"let g:vista_executive_for = {
+"			\ 'cpp': 'vim_lsp',
+"			\ 'php': 'vim_lsp',
+"			\ }
+"
+"" Declare the command including the executable and options used to generate ctags output
+"" for some certain filetypes.The file path will be appened to your custom command.
+"" For example:
+"let g:vista_ctags_cmd = {
+"			\ 'haskell': 'hasktags -x -o - -c',
+"			\ }
+"
+"" To enable fzf's preview window set g:vista_fzf_preview.
+"" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+"" For example:
+""let g:vista_fzf_preview = ['right:50%']
+"" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+"let g:vista#renderer#enable_icon = 1
+"
+"" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
+"let g:vista#renderer#icons = {
+"			\   "function": "\uf794",
+"			\   "variable": "\uf71b",
+"			\  }
