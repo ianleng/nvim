@@ -39,6 +39,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " Direction
+Plug 'preservim/tagbar'
 Plug 'easymotion/vim-easymotion'
 Plug 'RRethy/vim-illuminate'
 Plug 'tpope/vim-surround'
