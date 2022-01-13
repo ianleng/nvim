@@ -30,7 +30,7 @@ set hidden
 set splitright
 set splitbelow
 set showcmd
-set colorcolumn=80
+set colorcolumn=100
 set foldmethod=indent
 set foldlevel=99
 set foldenable
@@ -140,10 +140,16 @@ tnoremap <m-x> <C-\><C-N><C-O>:q<cr>
 map tc :bw! term*<c-a><cr>
 
 " Resize
-map <up> :res +5<cr>
-map <down> :res -5<cr>
-map <left> :vertical resize-5<cr>
-map <right> :vertical resize+5<cr>
+map <c-up> :res +5<cr>
+map <c-down> :res -5<cr>
+map <c-left> :vertical resize-5<cr>
+map <c-right> :vertical resize+5<cr>
+
+" Switch
+"map <c-h> <c-w>h
+"map <c-j> <c-w>j
+"map <c-k> <c-w>k
+"map <c-l> <c-w>l
 
 
 " =======================
@@ -196,7 +202,7 @@ endfunc
 " For Windows
 " =======================
 "if has("win32")
-"	"set shell=powershell.exe
+"	set shell=powershell.exe
 "	set shell=cmd.exe
 "	"set shellcmdflag=/c\ powershell.exe\ -NoLogo\ -NoProfile\ -NonInteractive\ -ExecutionPolicy\ RemoteSigned
 "	set shellpipe=|
@@ -207,26 +213,36 @@ endfunc
 " =======================
 " Plugins
 " =======================
-let g:ale_completion_enabled = 1
-
 call plug#begin('~/.vim/plugged')
 
-Plug 'morhetz/gruvbox'
+"Plug 'morhetz/gruvbox'
+"Plug 'AlessandroYorba/Sierra'
+"Plug 'vim-scripts/wombat256.vim'
+"Plug 'tomasr/molokai'
+"Plug 'connorholyday/vim-snazzy'
+"Plug 'rakr/vim-one'
+"Plug 'junegunn/seoul256.vim'
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
-Plug 'itchyny/lightline.vim'
-Plug 'bling/vim-bufferline'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"Plug 'bling/vim-bufferline'
 Plug 'sheerun/vim-polyglot'
 Plug 'preservim/tagbar'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'dense-analysis/ale'
+"Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
+"Plug 'doums/darcula'
+"Plug 'mengelbrecht/lightline-bufferline'
+"Plug 'ajmwagar/vim-deus'
 
 call plug#end()
 
@@ -237,8 +253,24 @@ call plug#end()
 " ------------
 " Theme
 " ------------
-color gruvbox
+"let g:gruvbox_contrast_dark = 'hard'
+"color gruvbox
+"color deus
+"colo darkblue
+"color darcula
+"let g:seoul256_background = 235
+"color seoul256
+"hi Pmenu guifg=#c0c0c0 guibg=#404080
+"hi PmenuSel guifg=#c0c0c0 guibg=#2050d0
+"hi PmenuSbar guifg=blue guibg=darkgray
+"hi PmenuThumb guifg=#c0c0c0
 
+hi Pmenu ctermfg=230 ctermbg=238 guifg=#ffffd7 guibg=#444444
+hi PmenuSel ctermfg=232 ctermbg=192 guifg=#080808 guibg=#cae982
+
+" ------------
+" CtrlP
+" ------------
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
@@ -255,9 +287,11 @@ nnoremap <leader>nn :NERDTree<CR>
 nnoremap <leader>ns :NERDTreeFind<CR>
 
 " ------------
-" Lightline
+" Airline
 " ------------
-
+let g:airline_theme = 'dark'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " ------------
 " Easymotion
@@ -270,17 +304,18 @@ nmap <Leader>mm <Plug>(easymotion-overwin-f)
 nmap s <Plug>(easymotion-overwin-f2)
 
 " Move to line
-map <Leader>ml <Plug>(easymotion-bd-jk)
-nmap <Leader>ml <Plug>(easymotion-overwin-line)
+map <Leader>ll <Plug>(easymotion-bd-jk)
+nmap <Leader>ll <Plug>(easymotion-overwin-line)
 
 " Move to word
-map  <Leader>mw <Plug>(easymotion-bd-w)
-nmap <Leader>mw <Plug>(easymotion-overwin-w)" Move to word
+map  <Leader>ww <Plug>(easymotion-bd-w)
+noremap <Leader>ww <Plug>(easymotion-overwin-w)" Move to word
 
 " ------------
 " Tagbar
 " ------------
 nnoremap <Leader>tt :TagbarToggle<CR>
+"let g:tagbar_ctags_bin = 'C:\NNIT\bin\ctags\ctags.exe'
 
 " ------------
 " COC
@@ -290,7 +325,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
+" set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -444,3 +479,7 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+" coc-prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+

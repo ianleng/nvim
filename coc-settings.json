@@ -1,6 +1,6 @@
 {
   "coc.preferences.extensionUpdateCheck": "daily",
-  "coc.preferences.formatOnSaveFiletypes": ["json", "python"],
+//  "coc.preferences.formatOnSaveFiletypes": ["json", "python"],
   "suggest.noselect": true,
   "suggest.enablePreselect": false,
   "python.linting.enabled": true,
